@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "GetBlogs";
+    //AjaxOptions ajaxOptions = new AjaxOptions
+    //{
+    //    UpdateTargetId = "blogsTable",
+    //    LoadingElementId = "loadingBlogs",
+    //    LoadingElementDuration = 5000,
+    //    Confirm = "你真的要显示所有博客?",
+    //};
+}
+
+@using ASP.NET_MVC_5.Models;
+
+@model string
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+
+<div id="loadingBlogs" style="background-color:cadetblue; display:none">
+    <p>Loading Blogs...</p>
+</div>
+
+@*@model IEnumerable<Blog>*@
+<h2>GetBlogs</h2>
+<table style="background-color:lightcoral">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>BlogAddress</th>
+            <th>Description</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        @*@foreach (Blog p in Model)
+            {
+                <tr>
+                    <td>@p.Id</td>
+                    <td>@p.Name</td>
+                    <td>@p.BlogAddress</td>
+                    <td>@p.Description</td>
+                    <td>@p.Category</td>
+                </tr>
+            }*@
+    <tbody id="blogsTable">
+        @Html.Action("GetBlogData", new { selectedCategory = Model })
+    </tbody>
+</table>
+
+@*@using (Html.BeginForm())
+    {
+        <div>
+            @Html.DropDownList("selectedCategory", new SelectList(new[] { "All"}.Concat(Enum.GetNames(typeof(Category))) ))
+            <button type="submit">提交</button>
+        </div>
+
+    }*@
+
+@*@using (Ajax.BeginForm("GetBlogData", ajaxOptions))
+{
+    <div>
+        @Html.DropDownList("selectedCategory", new SelectList(
+            new[] { "All" }.Concat(Enum.GetNames(typeof(Category)))))
+        <button type="submit">提交</button>
+    </div>
+}*@
+<br />
+<br />
+<div>
+    @foreach (string category in Enum.GetNames(typeof(Category)))
+    {
+        <div class="ajaxLink">
+            @Ajax.ActionLink(category, "GetBlogData",
+                new { selectedCategory = category },
+                new AjaxOptions { UpdateTargetId = "blogsTable" })
+        </div>
+    }
+</div>

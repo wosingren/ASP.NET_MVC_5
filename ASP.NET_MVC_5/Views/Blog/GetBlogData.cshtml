@@ -1,0 +1,18 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using ASP.NET_MVC_5.Models
+@model IEnumerable<Blog>
+
+@foreach (Blog b in Model)
+{
+    <tr>
+        <td>@b.Id</td>
+        <td>@b.Name</td>
+        <td>@b.BlogAddress</td>
+        <td>@b.Description</td>
+        <td>@b.Category</td>
+    </tr>
+}
