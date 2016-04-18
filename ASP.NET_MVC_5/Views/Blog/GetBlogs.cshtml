@@ -20,6 +20,21 @@
     <p>Loading Blogs...</p>
 </div>
 
+<script type="text/javascript">
+    function blogData(data) {
+        var blog = $("#blogsTable");
+        blog.empty();
+        for (var i = 0; i < data.length; i++) {
+            var b = data[i];
+            blog.append("<tr><td>" + b.ID + "</td><td>"
+            + b.Name + "</td><td>" + b.Name + "</td><td>"
+            + b.BlogAddress + "</td>" + b.BlogAddress + "<td></td>"
+            + b.Description + "</td>" + b.Description + "<td></td>"
+            + b.Category + "</td><td>" + b.Category + "</td></tr>");
+        }
+    }
+</script>
+
 @*@model IEnumerable<Blog>*@
 <h2>GetBlogs</h2>
 <table style="background-color:lightcoral">
@@ -58,22 +73,26 @@
     }*@
 
 @*@using (Ajax.BeginForm("GetBlogData", ajaxOptions))
-{
-    <div>
-        @Html.DropDownList("selectedCategory", new SelectList(
-            new[] { "All" }.Concat(Enum.GetNames(typeof(Category)))))
-        <button type="submit">提交</button>
-    </div>
-}*@
+    {
+        <div>
+            @Html.DropDownList("selectedCategory", new SelectList(
+                new[] { "All" }.Concat(Enum.GetNames(typeof(Category)))))
+            <button type="submit">提交</button>
+        </div>
+    }*@
 <br />
 <br />
 <div>
     @foreach (string category in Enum.GetNames(typeof(Category)))
     {
         <div class="ajaxLink">
-            @Ajax.ActionLink(category, "GetBlogData",
+            @Ajax.ActionLink(category, "GetBlogs",
                 new { selectedCategory = category },
-                new AjaxOptions { UpdateTargetId = "blogsTable" })
+                new AjaxOptions
+                {
+                    Url = Url.Action("GetBlogDataJson", new { selectedCategory = category }),
+                    OnSuccess = "blogData"
+                })
         </div>
     }
 </div>

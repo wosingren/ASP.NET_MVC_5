@@ -1,9 +1,11 @@
 ﻿using ASP.NET_MVC_5.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace ASP.NET_MVC_5.Controllers
 {
@@ -20,6 +22,30 @@ namespace ASP.NET_MVC_5.Controllers
             return View();
         }
 
+
+        private IEnumerable<Blog> GetBlog(string selectedCategory)
+        {
+            IEnumerable<Blog> data = blogs;
+            if (selectedCategory != "All")
+            {
+                Category selected = (Category)Enum.Parse(typeof(Category), selectedCategory);
+                data = blogs.Where(p => p.Category == selected);
+            }
+            return data;
+        }
+
+        public JsonResult GetBlogDataJson(string selectedCategory = "All")
+        {
+            var data = GetBlog(selectedCategory).Select(b => new
+            {
+                ID = b.Id,
+                Name = b.Name,
+                BlogAddress = b.BlogAddress,
+                Description = b.Description,
+                Category = Enum.GetName(typeof(Category), b.Category)
+            });
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
 
         public PartialViewResult GetBlogData(string selectedCategory = "All")
         {
